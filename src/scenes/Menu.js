@@ -14,10 +14,11 @@ class Menu extends Phaser.Scene {
         //Music provided by NoCopyrightSounds
         //Free Download/Stream: http://ncs.io/hellcat
         //Watch: http://youtu.be/JSY6vBPunpY
-        this.load.audio('menu_music', './assets/Desmeon_Hellcat.wav')
+        this.load.audio('menu_music', './assets/Desmeon_Hellcat.wav');
     }
 
     create() {
+
         // menu text configuration
         let menuConfig = {
             fontFamily: 'Courier',
@@ -31,9 +32,14 @@ class Menu extends Phaser.Scene {
             },
             fixedWidth: 0
         }
-        
+        //Play music on a loop
+        var music = this.sound.add('menu_music');
+        music.setLoop(true);
+        music.play();
+
+
         // show menu text
-        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'ROCKET PATROL', menuConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'The Adventurous Cat', menuConfig).setOrigin(0.5);
         this.add.text(game.config.width/2, game.config.height/2, 'Use ←→ arrows to move & (F) to fire', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#00FF00';
         menuConfig.color = '#000';
@@ -52,7 +58,8 @@ class Menu extends Phaser.Scene {
             gameTimer: 60000    
           }
           this.sound.play('sfx_select');
-          this.scene.start("playScene");    
+          this.scene.start("playScene"); 
+          this.sound.removeByKey('menu_music')   
         }
         if (Phaser.Input.Keyboard.JustDown(keyRIGHT)) {
           // Expert mode
@@ -61,7 +68,8 @@ class Menu extends Phaser.Scene {
             gameTimer: 45000    
           }
           this.sound.play('sfx_select');
-          this.scene.start("playScene");    
+          this.scene.start("playScene");
+          this.sound.removeByKey('menu_music')     
         }
       }
 }

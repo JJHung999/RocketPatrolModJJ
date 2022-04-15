@@ -5,7 +5,7 @@ class Play extends Phaser.Scene {
 
     preload() {
         // load images/tile sprites
-        this.load.image('cat', './assets/rocket.png');
+        this.load.image('cat', './assets/CatIdleSpriteSheet.png');
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('starfield', './assets/starfield.png');
         
@@ -27,11 +27,29 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        // place tile background
+        // place the 3 tile backgrounds
         this.skybackground = this.add.tileSprite(0, 0, 640, 480, 'sky').setOrigin(0, 0);
         this.midbackground = this.add.tileSprite(0, 0, 640, 480, 'buildings').setOrigin(0, 0);
         this.frontbackground = this.add.tileSprite(0, 0, 640, 480, 'trees').setOrigin(0, 0);
 
+        // animation config
+        this.anims.create({
+            key: 'explode',
+            frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 9, first: 0}),
+            frameRate: 30
+        });
+        this.anims.create({
+            key: 'catRun',
+            frames:this.anims.generateFrameNumbers('catIdle', { start: 0, end: 4, first: 0}),
+            frameRate: 30,
+        });
+
+        //Play music on a loop
+        var music = this.sound.add('level_music');
+        music.setLoop(true);
+        music.play();
+
+        //re-design
         // green UI background
         //this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
 
@@ -42,7 +60,7 @@ class Play extends Phaser.Scene {
         //this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
 
         // add cat (p1)
-        this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
+        this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat').setOrigin(0.5, 0);
 
         // add Spaceships (x3)
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
@@ -54,18 +72,6 @@ class Play extends Phaser.Scene {
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-
-        // animation config
-        this.anims.create({
-            key: 'explode',
-            frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 9, first: 0}),
-            frameRate: 30
-        },
-        {
-            key: 'catRun',
-            frames:this.anims.generateFrameNumbers('catIdle', { start: 0, end: 4, first: 0}),
-            frameRate: 30,
-        });
 
         // initialize score
         this.p1Score = 0;
@@ -105,6 +111,7 @@ class Play extends Phaser.Scene {
 
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menuScene");
+            this.sound.removeByKey('level_music') 
         }
 
         this.skybackground.tilePositionX += 1;  // update tile sprite

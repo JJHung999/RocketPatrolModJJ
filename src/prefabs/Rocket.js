@@ -1,4 +1,6 @@
-// Cat prefab
+// Cat prefab (no need to really change thee names)
+// 1. changing names cause a lot of issues
+// 2. made little difference
 class Rocket extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, texture, frame) {
         super(scene, x, y, texture, frame);
@@ -8,6 +10,7 @@ class Rocket extends Phaser.GameObjects.Sprite {
         this.moveSpeed = 2;         // pixels per frame
         this.sfxCat = scene.sound.add('sfx_rocket')  // add cat sfx
     }
+
 
     update() {
         // left/right movement
