@@ -5,26 +5,36 @@ class Play extends Phaser.Scene {
 
     preload() {
         // load images/tile sprites
-        this.load.image('rocket', './assets/rocket.png');
+        this.load.image('cat', './assets/rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('starfield', './assets/starfield.png');
+        
+        // load parallax background
+        this.load.image('sky','./assets/skybackground.png');
+        this.load.image('buildings','./assets/midbackground.png');
+        this.load.image('trees','./assets/frontbackground.png');
+
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('catIdle','./assets/CatIdleSpriteSheet.png',{frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
     }
 
     create() {
-        // place tile sprite
-        this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
+        // place tile background
+        this.skybackground = this.add.tileSprite(0, 0, 640, 480, 'sky').setOrigin(0, 0);
+        this.midbackground = this.add.tileSprite(0, 0, 640, 480, 'buildings').setOrigin(0, 0);
+        this.frontbackground = this.add.tileSprite(0, 0, 640, 480, 'trees').setOrigin(0, 0);
 
         // green UI background
-        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
+        //this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
+
         // white borders
         this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
         this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
         this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
         this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
 
-        // add Rocket (p1)
+        // add cat (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
 
         // add Spaceships (x3)
@@ -85,11 +95,14 @@ class Play extends Phaser.Scene {
             this.scene.start("menuScene");
         }
 
-        this.starfield.tilePositionX -= 4;  // update tile sprite
+        this.skybackground.tilePositionX -= 1;  // update tile sprite
+        this.midbackground.tilePositionX -= 4;  // update tile sprite
+        this.frontbackground.tilePositionX -= 6;  // update tile sprite
+
 
         if(!this.gameOver) {
             this.p1Rocket.update();             // update p1
-             this.ship01.update();               // update spaceship (x3)
+            this.ship01.update();               // update spaceship (x3)
             this.ship02.update();
             this.ship03.update();
         }
@@ -109,12 +122,12 @@ class Play extends Phaser.Scene {
         }
     }
 
-    checkCollision(rocket, ship) {
+    checkCollision(cat, ship) {
         // simple AABB checking
-        if (rocket.x < ship.x + ship.width && 
-            rocket.x + rocket.width > ship.x && 
-            rocket.y < ship.y + ship.height &&
-            rocket.height + rocket.y > ship. y) {
+        if (cat.x < ship.x + ship.width && 
+            cat.x + cat.width > ship.x && 
+            cat.y < ship.y + ship.height &&
+            cat.height + cat.y > ship. y) {
                 return true;
         } else {
             return false;
