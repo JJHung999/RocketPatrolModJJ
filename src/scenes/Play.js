@@ -17,6 +17,13 @@ class Play extends Phaser.Scene {
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
         this.load.spritesheet('catIdle','./assets/CatIdleSpriteSheet.png',{frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
+
+        
+        //Song: Rob Gasser - Ricochet [NCS Release]
+        //Music provided by NoCopyrightSounds
+        //Free Download/Stream: http://ncs.io/Ricochet
+        //Watch: http://youtu.be/T4Gq9pkToS8
+        this.load.audio('level_music','./assets/Rob_Gasser_Ricochet.wav');
     }
 
     create() {
@@ -29,10 +36,10 @@ class Play extends Phaser.Scene {
         //this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
 
         // white borders
-        this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
-        this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
-        this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
-        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
+        //this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
+        //this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
+        //this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
+        //this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
 
         // add cat (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
@@ -53,6 +60,11 @@ class Play extends Phaser.Scene {
             key: 'explode',
             frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 9, first: 0}),
             frameRate: 30
+        },
+        {
+            key: 'catRun',
+            frames:this.anims.generateFrameNumbers('catIdle', { start: 0, end: 4, first: 0}),
+            frameRate: 30,
         });
 
         // initialize score
@@ -95,9 +107,9 @@ class Play extends Phaser.Scene {
             this.scene.start("menuScene");
         }
 
-        this.skybackground.tilePositionX -= 1;  // update tile sprite
-        this.midbackground.tilePositionX -= 4;  // update tile sprite
-        this.frontbackground.tilePositionX -= 6;  // update tile sprite
+        this.skybackground.tilePositionX += 1;  // update tile sprite
+        this.midbackground.tilePositionX += 4;  // update tile sprite
+        this.frontbackground.tilePositionX += 6;  // update tile sprite
 
 
         if(!this.gameOver) {

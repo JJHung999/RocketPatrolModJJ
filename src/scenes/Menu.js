@@ -8,6 +8,13 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_select', './assets/blip_select12.wav');
         this.load.audio('sfx_explosion', './assets/explosion38.wav');
         this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
+
+        // load music
+        //Song: Desmeon - Hellcat [NCS Release]
+        //Music provided by NoCopyrightSounds
+        //Free Download/Stream: http://ncs.io/hellcat
+        //Watch: http://youtu.be/JSY6vBPunpY
+        this.load.audio('menu_music', './assets/Desmeon_Hellcat.wav')
     }
 
     create() {
