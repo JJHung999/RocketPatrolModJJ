@@ -5,9 +5,11 @@ class Play extends Phaser.Scene {
 
     preload() {
         // load images/tile sprites
-        this.load.image('cat', './assets/CatIdleSpriteSheet.png');
+        this.load.image('cat', './assets/CatSprite');
         this.load.image('spaceship', './assets/spaceship.png');
-        this.load.image('starfield', './assets/starfield.png');
+        this.load.image('bird','./assests/BirdSprite.png');
+        this.load.image('fish','./assests/FishSprite.png');
+        this.load.image('milk','milk_bottle.png');
         
         // load parallax background
         this.load.image('sky','./assets/skybackground.png');
@@ -16,9 +18,10 @@ class Play extends Phaser.Scene {
 
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
-        this.load.spritesheet('catIdle','./assets/CatIdleSpriteSheet.png',{frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
+        this.load.spritesheet('catRun','./assets/CatRunSpriteSheet.png',{frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
+        this.load.spritesheet('birdFlying','./assets/BirdFlying.png',{frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
+        this.load.spritesheet('fishFlying','./assets/FishFlying.png',{frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
 
-        
         //Song: Rob Gasser - Ricochet [NCS Release]
         //Music provided by NoCopyrightSounds
         //Free Download/Stream: http://ncs.io/Ricochet
@@ -103,6 +106,25 @@ class Play extends Phaser.Scene {
         }, null, this);
     }
 
+    //replace the still sprites with an animated one
+    ship(ship) {
+        // temporarily hide ship
+        ship.alpha = 0;                         
+        // create explosion sprite at ship's position
+        let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
+        boom.anims.play('explode');             // play explode animation
+        boom.on('animationcomplete', () => {    // callback after anim completes
+            ship.reset();                         // reset ship position
+            ship.alpha = 1;                       // make ship visible again
+            boom.destroy();                       // remove explosion sprite
+        });
+        // score add and repaint
+        this.p1Score += ship.points;
+        this.scoreLeft.text = this.p1Score; 
+        
+        this.sound.play('sfx_explosion');
+      }
+
     update() {
         // check key input for restart / menu
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
@@ -117,7 +139,6 @@ class Play extends Phaser.Scene {
         this.skybackground.tilePositionX += 1;  // update tile sprite
         this.midbackground.tilePositionX += 4;  // update tile sprite
         this.frontbackground.tilePositionX += 6;  // update tile sprite
-
 
         if(!this.gameOver) {
             this.p1Rocket.update();             // update p1
@@ -170,4 +191,6 @@ class Play extends Phaser.Scene {
         
         this.sound.play('sfx_explosion');
       }
+
+
 }
