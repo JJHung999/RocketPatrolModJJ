@@ -52,20 +52,22 @@ class Menu extends Phaser.Scene {
 
     update() {
         if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-          // Novice mode
+          // single player mode
           game.settings = {
             spaceshipSpeed: 3,
-            gameTimer: 60000    
+            gameTimer: 60000,
+            singlePlayer: 1    
           }
           this.sound.play('sfx_select');
           this.scene.start("playScene"); 
           this.sound.removeByKey('menu_music')   
         }
         if (Phaser.Input.Keyboard.JustDown(keyRIGHT)) {
-          // Expert mode
+          // 2 player mode
           game.settings = {
             spaceshipSpeed: 4,
-            gameTimer: 45000    
+            gameTimer: 45000,
+            singlePlayer: 0  
           }
           this.sound.play('sfx_select');
           this.scene.start("playScene");

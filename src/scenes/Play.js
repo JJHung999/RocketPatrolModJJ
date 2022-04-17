@@ -30,6 +30,7 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+
         // place the 3 tile backgrounds
         this.skybackground = this.add.tileSprite(0, 0, 640, 480, 'sky').setOrigin(0, 0);
         this.midbackground = this.add.tileSprite(0, 0, 640, 480, 'buildings').setOrigin(0, 0);
@@ -47,21 +48,33 @@ class Play extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         });
+        this.anims.create({
+            key: 'fishFly',
+            frames: this.anims.generateFrameNumbers('fishFlying', { start: 0, end: 4, first: 0}),
+            frameRate: 10,
+            repeat: -1
+        });        
+        this.anims.create({
+            key: 'birdFly',
+            frames: this.anims.generateFrameNumbers('birdFlying', { start: 0, end: 4, first: 0}),
+            frameRate: 10,
+            repeat: -1
+        });
+
 
         //Play music on a loop
         var music = this.sound.add('level_music');
         music.setLoop(true);
         music.play();
 
-        //re-design
         // green UI background
         //this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
 
-        // white borders
-        //this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
-        //this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
-        //this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
-        //this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
+        // borders
+        this.add.rectangle(0, 0, game.config.width, borderUISize/8, 0xFFFD00).setOrigin(0 ,0);
+        this.add.rectangle(0, game.config.height - borderUISize/8, game.config.width, borderUISize, 0xFFFD00).setOrigin(0 ,0);
+        this.add.rectangle(0, 0, borderUISize/8, game.config.height, 0xFFFD00).setOrigin(0 ,0);
+        this.add.rectangle(game.config.width - borderUISize/8, 0, borderUISize, game.config.height, 0xFFFD00).setOrigin(0 ,0);
 
         // add cat (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat').setOrigin(0.5, 0);
@@ -72,7 +85,7 @@ class Play extends Phaser.Scene {
         this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'milk', 0, 10).setOrigin(0,0); //milk
 
         // define keys
-        keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
@@ -96,6 +109,8 @@ class Play extends Phaser.Scene {
         }
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
 
+        //display timer
+
         // GAME OVER flag
         this.gameOver = false;
 
@@ -108,13 +123,16 @@ class Play extends Phaser.Scene {
         }, null, this);
 
         // call the animate function
-        this.animate(this.p1Rocket,'catRun');
+        //this.animate(this.p1Rocket,'catRun');
+        this.animate(this.ship01,'fishFly');
+        this.animate(this.ship02,'birdFly');
         
     }
 
     update() {
         // call the animate function
         //this.animate(this.p1Rocket,'catRun');
+
 
         // check key input for restart / menu
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
@@ -138,17 +156,21 @@ class Play extends Phaser.Scene {
             this.ship03.update();
         }
 
+        if (this.y >= game.config.height - borderUISize - borderPadding){
+            this.p1Rocket.reset();
+        }
+
         // check collisions
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
-            this.p1Rocket.reset();
+            //this.p1Rocket.reset();
             this.shipExplode(this.ship03);
         }
         if (this.checkCollision(this.p1Rocket, this.ship02)) {
-            this.p1Rocket.reset();
+            //this.p1Rocket.reset();
             this.shipExplode(this.ship02);
         }
         if (this.checkCollision(this.p1Rocket, this.ship01)) {
-            this.p1Rocket.reset();
+            //this.p1Rocket.reset();
             this.shipExplode(this.ship01);
         }
     }
@@ -179,6 +201,7 @@ class Play extends Phaser.Scene {
         // score add and repaint
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score; 
+        this.gameTimer += ship.points
         
         this.sound.play('sfx_explosion');
       }
@@ -192,5 +215,12 @@ class Play extends Phaser.Scene {
         anima.anims.play(spritesheet); // play spritesheet animation
       };
     
+    //set texture
+    setTexture(key, frame)
+    {
+        this.texture = this.scene.sys.textures.get(key);
+
+        return this.setFrame(frame);
+    }
     
 }
