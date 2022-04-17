@@ -5,11 +5,11 @@ class Play extends Phaser.Scene {
 
     preload() {
         // load images/tile sprites
-        this.load.image('cat', './assets/CatSprite');
+        this.load.image('cat', './assets/CatSprite.png');
         this.load.image('spaceship', './assets/spaceship.png');
-        this.load.image('bird','./assests/BirdSprite.png');
-        this.load.image('fish','./assests/FishSprite.png');
-        this.load.image('milk','milk_bottle.png');
+        this.load.image('bird','./assets/BirdSprite.png');
+        this.load.image('fish','./assets/FishSprite.png');
+        this.load.image('milk','./assets/milk_bottle.png');
         
         // load parallax background
         this.load.image('sky','./assets/skybackground.png');
@@ -43,8 +43,9 @@ class Play extends Phaser.Scene {
         });
         this.anims.create({
             key: 'catRun',
-            frames:this.anims.generateFrameNumbers('catIdle', { start: 0, end: 4, first: 0}),
-            frameRate: 30,
+            frames: this.anims.generateFrameNumbers('catRun', { start: 0, end: 4, first: 0}),
+            frameRate: 10,
+            repeat: -1
         });
 
         //Play music on a loop
@@ -66,9 +67,9 @@ class Play extends Phaser.Scene {
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat').setOrigin(0.5, 0);
 
         // add Spaceships (x3)
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0);
+        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'fish', 0, 30).setOrigin(0, 0); //fish
+        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'bird', 0, 20).setOrigin(0,0); //bird
+        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'milk', 0, 10).setOrigin(0,0); //milk
 
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -78,6 +79,7 @@ class Play extends Phaser.Scene {
 
         // initialize score
         this.p1Score = 0;
+
 
         // display score
         let scoreConfig = {
@@ -104,41 +106,30 @@ class Play extends Phaser.Scene {
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← to Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
+
+        // call the animate function
+        this.animate(this.p1Rocket,'catRun');
+        
     }
 
-    //replace the still sprites with an animated one
-    ship(ship) {
-        // temporarily hide ship
-        ship.alpha = 0;                         
-        // create explosion sprite at ship's position
-        let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
-        boom.anims.play('explode');             // play explode animation
-        boom.on('animationcomplete', () => {    // callback after anim completes
-            ship.reset();                         // reset ship position
-            ship.alpha = 1;                       // make ship visible again
-            boom.destroy();                       // remove explosion sprite
-        });
-        // score add and repaint
-        this.p1Score += ship.points;
-        this.scoreLeft.text = this.p1Score; 
-        
-        this.sound.play('sfx_explosion');
-      }
-
     update() {
+        // call the animate function
+        //this.animate(this.p1Rocket,'catRun');
+
         // check key input for restart / menu
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
         }
+
 
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menuScene");
             this.sound.removeByKey('level_music') 
         }
 
-        this.skybackground.tilePositionX += 1;  // update tile sprite
-        this.midbackground.tilePositionX += 4;  // update tile sprite
-        this.frontbackground.tilePositionX += 6;  // update tile sprite
+        this.skybackground.tilePositionX += 1/2;  // update tile sprite
+        this.midbackground.tilePositionX += 2;  // update tile sprite
+        this.frontbackground.tilePositionX += 4;  // update tile sprite
 
         if(!this.gameOver) {
             this.p1Rocket.update();             // update p1
@@ -192,5 +183,14 @@ class Play extends Phaser.Scene {
         this.sound.play('sfx_explosion');
       }
 
-
+    //replace the still sprites with an animated one
+    animate(objectSprite, spritesheet) {
+        // hide default sprite
+        objectSprite.alpha = 1;                         
+        // create sprite at cat's position
+        let anima = this.add.sprite(objectSprite.x, objectSprite.y, spritesheet).setOrigin(0, 0);
+        anima.anims.play(spritesheet); // play spritesheet animation
+      };
+    
+    
 }
