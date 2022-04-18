@@ -205,18 +205,20 @@ class Play extends Phaser.Scene {
             this.p1Rocket.play('catRun')
         }
         
-        //isFiring changes animation
-        if(this.p2Rocket.isFiring && this.cat2Fall == false){
-            this.p2Rocket.play('cat2Up');
-        }
-        //if the cat is Sfalling, play catDown
-        if(this.p2Rocket.y <= 109.33333333333331){
-            this.cat2Fall = true
-            this.p2Rocket.play('cat2Down');
-        }
-        if(this.p2Rocket.y >= 437.3333333333333 && this.cat2Fall == true){
-            this.cat2Fall = false
-            this.p2Rocket.play('cat2Run')
+        if(game.settings.singlePlayer == 0){
+            //isFiring changes animation
+            if(this.p2Rocket.isFiring && this.cat2Fall == false){
+                this.p2Rocket.play('cat2Up');
+            }
+            //if the cat is Sfalling, play catDown
+            if(this.p2Rocket.y <= 109.33333333333331){
+                this.cat2Fall = true
+                this.p2Rocket.play('cat2Down');
+            }
+            if(this.p2Rocket.y >= 437.3333333333333 && this.cat2Fall == true){
+                this.cat2Fall = false
+                this.p2Rocket.play('cat2Run')
+            }
         }
 
         // check key input for restart / menu
