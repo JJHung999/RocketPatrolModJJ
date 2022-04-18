@@ -195,7 +195,6 @@ class Play extends Phaser.Scene {
             this.ship05.update();
         }
 
-        console.log(this.p1Rocket.y)
         //resets the rockets to stop them from phasing through the ground
         if (this.p1Rocket.y>= game.config.height - borderUISize - borderPadding){
             this.p1Rocket.reset();
