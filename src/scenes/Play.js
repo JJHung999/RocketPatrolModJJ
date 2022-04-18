@@ -6,6 +6,7 @@ class Play extends Phaser.Scene {
     preload() {
         // load images/tile sprites
         this.load.image('cat', './assets/CatSprite.png');
+        this.load.image('cat2','./assets/Cat2Sprite.png')
         this.load.image('bird','./assets/BirdSprite.png');
         this.load.image('fish','./assets/FishSprite.png');
         this.load.image('milk','./assets/milk_bottle.png');
@@ -20,6 +21,7 @@ class Play extends Phaser.Scene {
         this.load.spritesheet('catRun','./assets/CatRunSpriteSheet.png',{frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
         this.load.spritesheet('birdFlying','./assets/BirdFlying.png',{frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
         this.load.spritesheet('fishFlying','./assets/FishFlying.png',{frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
+        this.load.spritesheet('cat2Run','./assets/Cat2Run.png',{frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
 
         //Song: Rob Gasser - Ricochet [NCS Release]
         //Music provided by NoCopyrightSounds
@@ -81,6 +83,7 @@ class Play extends Phaser.Scene {
         }else{
             //add cats p1 and p2
             this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat').setOrigin(0.5, 0);
+            this.p2Rocket = new Rocket2(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat2').setOrigin(0.5, 0);
         }
 
         // add objects (x5)
@@ -95,6 +98,10 @@ class Play extends Phaser.Scene {
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+
+        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        keyT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T);
 
         // initialize score
         this.p1Score = 0;
