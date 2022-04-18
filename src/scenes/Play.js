@@ -10,7 +10,13 @@ class Play extends Phaser.Scene {
         this.load.image('bird','./assets/BirdSprite.png');
         this.load.image('fish','./assets/FishSprite.png');
         this.load.image('milk','./assets/milk_bottle.png');
-        
+
+        //load in other cat textures
+        this.load.image('catUp','./assets/CatUp.png');
+        this.load.image('catDown','./assets/CatDown.png');
+        this.load.image('cat2Up','./assets/Cat2Up.png');
+        this.load.image('cat2Down','./assets/Cat2Down.png');
+
         // load parallax background
         this.load.image('sky','./assets/skybackground.png');
         this.load.image('buildings','./assets/midbackground.png');
