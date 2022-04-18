@@ -50,6 +50,12 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
         this.anims.create({
+            key: 'cat2Run',
+            frames: this.anims.generateFrameNumbers('cat2Run', { start: 0, end: 4, first: 0}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
             key: 'fishFly',
             frames: this.anims.generateFrameNumbers('fishFlying', { start: 0, end: 4, first: 0}),
             frameRate: 10,
@@ -78,14 +84,13 @@ class Play extends Phaser.Scene {
         this.add.rectangle(game.config.width - borderUISize/8, 0, borderUISize, game.config.height, 0xFFFD00).setOrigin(0 ,0);
 
         // add cat (p1)
-        if(game.settings.singleplayer = 1){
-            this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat').setOrigin(0.5, 0);
+        //add cats p1 and p2
+        if(game.settings.singlePlayer == 1){
+            this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat', 0,1).setOrigin(0.5, 0);
         }else{
-            //add cats p1 and p2
-            this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat').setOrigin(0.5, 0);
-            this.p2Rocket = new Rocket2(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat2').setOrigin(0.5, 0);
+            this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat', 0,1).setOrigin(0.5, 0);
+            this.p2Rocket = new Rocket(this, game.config.width/4, game.config.height - borderUISize - borderPadding, 'cat2', 0,2).setOrigin(0.5, 0);
         }
-
         // add objects (x5)
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'fish', 0, 30,3).setOrigin(0, 0); //fish
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'bird', 0, 20,1.5).setOrigin(0,0); //bird
@@ -110,7 +115,7 @@ class Play extends Phaser.Scene {
         let timerConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
+            backgroundColor: '#C3B1E1',
             color: '#843605',
             align: 'right',
             padding: {
@@ -125,7 +130,7 @@ class Play extends Phaser.Scene {
         let scoreConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
+            backgroundColor: '#C3B1E1',
             color: '#843605',
             align: 'right',
             padding: {
@@ -177,7 +182,12 @@ class Play extends Phaser.Scene {
         this.frontbackground.tilePositionX += 4;  // update tile sprite
 
         if(!this.gameOver) {
-            this.p1Rocket.update();             // update p1
+            if(game.settings.singlePlayer == 1){
+                this.p1Rocket.update();             // update p1
+            }else{
+                this.p1Rocket.update();             // update p1
+                this.p2Rocket.update(); 
+            }
             this.ship01.update();               // update spaceship (x3)
             this.ship02.update();
             this.ship03.update();
@@ -185,9 +195,17 @@ class Play extends Phaser.Scene {
             this.ship05.update();
         }
 
-        if (this.y >= game.config.height - borderUISize - borderPadding){
+        console.log(this.p1Rocket.y)
+        //resets the rockets to stop them from phasing through the ground
+        if (this.p1Rocket.y>= game.config.height - borderUISize - borderPadding){
             this.p1Rocket.reset();
         }
+        if(game.settings.singlePlayer == 0){
+            if (this.p2Rocket.y>= game.config.height - borderUISize - borderPadding){
+                this.p2Rocket.reset();
+            }
+        }
+
 
         // check collisions
         if(this.checkCollision(this.p1Rocket, this.ship04)) {
@@ -209,6 +227,28 @@ class Play extends Phaser.Scene {
         if (this.checkCollision(this.p1Rocket, this.ship01)) {
             //this.p1Rocket.reset();
             this.shipExplode(this.ship01);
+        }
+        if(game.settings.singlePlayer == 0){
+            if(this.checkCollision(this.p2Rocket, this.ship04)) {
+                //this.p1Rocket.reset();
+                this.shipExplode(this.ship04);
+            }        
+            if(this.checkCollision(this.p2Rocket, this.ship05)) {
+                //this.p1Rocket.reset();
+                this.shipExplode(this.ship05);
+            }
+            if(this.checkCollision(this.p2Rocket, this.ship03)) {
+                //this.p1Rocket.reset();
+                this.shipExplode(this.ship03);
+            }
+            if (this.checkCollision(this.p2Rocket, this.ship02)) {
+                //this.p1Rocket.reset();
+                this.shipExplode(this.ship02);
+            }
+            if (this.checkCollision(this.p2Rocket, this.ship01)) {
+                //this.p1Rocket.reset();
+                this.shipExplode(this.ship01);
+            }
         }
     }
 
