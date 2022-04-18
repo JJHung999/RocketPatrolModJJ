@@ -6,7 +6,6 @@ class Play extends Phaser.Scene {
     preload() {
         // load images/tile sprites
         this.load.image('cat', './assets/CatSprite.png');
-        this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('bird','./assets/BirdSprite.png');
         this.load.image('fish','./assets/FishSprite.png');
         this.load.image('milk','./assets/milk_bottle.png');
@@ -67,8 +66,8 @@ class Play extends Phaser.Scene {
         music.setLoop(true);
         music.play();
 
-        // green UI background
-        //this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
+        // some sort of background
+        //this.add.rectangle(0, borderUISize - borderPadding -20, game.config.width, borderUISize , 0x00FF00).setOrigin(0, 0);
 
         // borders
         this.add.rectangle(0, 0, game.config.width, borderUISize/8, 0xFFFD00).setOrigin(0 ,0);
@@ -77,12 +76,18 @@ class Play extends Phaser.Scene {
         this.add.rectangle(game.config.width - borderUISize/8, 0, borderUISize, game.config.height, 0xFFFD00).setOrigin(0 ,0);
 
         // add cat (p1)
-        this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat').setOrigin(0.5, 0);
+        if(game.settings.singleplayer = 1){
+            this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat').setOrigin(0.5, 0);
+        }else{
+            this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat').setOrigin(0.5, 0);
+        }
 
         // add Spaceships (x3)
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'fish', 0, 30).setOrigin(0, 0); //fish
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'bird', 0, 20).setOrigin(0,0); //bird
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'milk', 0, 10).setOrigin(0,0); //milk
+        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'fish', 0, 30,3).setOrigin(0, 0); //fish
+        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'bird', 0, 20,1.5).setOrigin(0,0); //bird
+        this.ship03 = new Spaceship(this, game.config.width + borderUISize, borderUISize*5 + borderPadding*2, 'bird', 0, 23,2).setOrigin(0,0); //bird
+        this.ship04 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'milk', 0, 10,1).setOrigin(0,0); //milk
+        this.ship05 = new Spaceship(this, game.config.width + borderUISize, borderUISize*6 + borderPadding*4, 'milk', 0, 15,1.5).setOrigin(0,0); //milk
 
         // define keys
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -93,6 +98,20 @@ class Play extends Phaser.Scene {
         // initialize score
         this.p1Score = 0;
 
+        //display timer
+        let timerConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'right',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 100
+        }
+        this.timerLeft = this.add.text(game.config.width-120, borderUISize - borderPadding*2, this.gameTimer, timerConfig);
 
         // display score
         let scoreConfig = {
@@ -107,9 +126,7 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 100
         }
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
-
-        //display timer
+        this.scoreLeft = this.add.text(borderUISize-borderPadding, borderUISize - borderPadding*2, this.p1Score, scoreConfig);
 
         // GAME OVER flag
         this.gameOver = false;
@@ -126,13 +143,15 @@ class Play extends Phaser.Scene {
         //this.animate(this.p1Rocket,'catRun');
         this.animate(this.ship01,'fishFly');
         this.animate(this.ship02,'birdFly');
-        
+        this.animate(this.ship03,'birdFly');
     }
 
     update() {
         // call the animate function
         //this.animate(this.p1Rocket,'catRun');
 
+        //timer display
+        this.timerLeft.text = Math.round(this.clock.delay-this.clock.elapsed)
 
         // check key input for restart / menu
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
@@ -154,6 +173,8 @@ class Play extends Phaser.Scene {
             this.ship01.update();               // update spaceship (x3)
             this.ship02.update();
             this.ship03.update();
+            this.ship04.update();
+            this.ship05.update();
         }
 
         if (this.y >= game.config.height - borderUISize - borderPadding){
@@ -161,6 +182,14 @@ class Play extends Phaser.Scene {
         }
 
         // check collisions
+        if(this.checkCollision(this.p1Rocket, this.ship04)) {
+            //this.p1Rocket.reset();
+            this.shipExplode(this.ship04);
+        }        
+        if(this.checkCollision(this.p1Rocket, this.ship05)) {
+            //this.p1Rocket.reset();
+            this.shipExplode(this.ship05);
+        }
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
             //this.p1Rocket.reset();
             this.shipExplode(this.ship03);
@@ -201,7 +230,7 @@ class Play extends Phaser.Scene {
         // score add and repaint
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score; 
-        this.gameTimer += ship.points
+        //this.gameTimer += ship.points  // cut because I don't how to make that update with the display
         
         this.sound.play('sfx_explosion');
       }

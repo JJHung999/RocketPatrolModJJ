@@ -37,7 +37,7 @@ class Rocket extends Phaser.GameObjects.Sprite {
             //this.reset();
         }
 
-        //force reset
+        //force reset going down
         if (this.y >= game.config.height){
             this.reset();}
 

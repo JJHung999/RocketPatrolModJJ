@@ -15,6 +15,9 @@ class Menu extends Phaser.Scene {
         //Free Download/Stream: http://ncs.io/hellcat
         //Watch: http://youtu.be/JSY6vBPunpY
         this.load.audio('menu_music', './assets/Desmeon_Hellcat.wav');
+
+        //custom menu images
+        this.load.image('menu','./assets/MenuBackground2.png');
     }
 
     create() {
