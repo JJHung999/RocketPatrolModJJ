@@ -5,9 +5,9 @@ class Menu extends Phaser.Scene {
 
     preload() {
         // load audio
-        this.load.audio('sfx_select', './assets/blip_select12.wav');
-        this.load.audio('sfx_explosion', './assets/explosion38.wav');
-        this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
+        this.load.audio('sfx_select', './assets/meow.wav');
+        this.load.audio('sfx_explosion', './assets/bong.wav');
+        this.load.audio('sfx_rocket', './assets/meow.wav');
 
         // load music
         //Song: Desmeon - Hellcat [NCS Release]
@@ -17,7 +17,7 @@ class Menu extends Phaser.Scene {
         this.load.audio('menu_music', './assets/Desmeon_Hellcat.wav');
 
         //custom menu images
-        this.load.image('menu','./assets/MenuBackground2.png');
+        this.load.image('menu','./assets/MenuBackground3.png');
     }
 
     create() {
@@ -40,13 +40,15 @@ class Menu extends Phaser.Scene {
         music.setLoop(true);
         music.play();
 
+        //create menu image
+        this.menuImage = this.add.sprite(game.config.width/2,game.config.height/2,'menu');
 
         // show menu text
-        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'The Adventurous Cat', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2, 'Use ←→ arrows to move & (F) to fire', menuConfig).setOrigin(0.5);
-        menuConfig.backgroundColor = '#00FF00';
-        menuConfig.color = '#000';
-        this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);
+        //this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'The Adventurous Cat', menuConfig).setOrigin(0.5);
+        //this.add.text(game.config.width/2, game.config.height/2, 'Use ←→ arrows to move & (F) to fire', menuConfig).setOrigin(0.5);
+        //menuConfig.backgroundColor = '#00FF00';
+        //menuConfig.color = '#000';
+        //this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);
 
         // define keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -63,7 +65,7 @@ class Menu extends Phaser.Scene {
           }
           this.sound.play('sfx_select');
           this.scene.start("playScene"); 
-          this.sound.removeByKey('menu_music')   
+          this.sound.removeByKey('menu_music');   
         }
         if (Phaser.Input.Keyboard.JustDown(keyRIGHT)) {
           // 2 player mode
@@ -74,7 +76,7 @@ class Menu extends Phaser.Scene {
           }
           this.sound.play('sfx_select');
           this.scene.start("playScene");
-          this.sound.removeByKey('menu_music')     
+          this.sound.removeByKey('menu_music');     
         }
       }
 }

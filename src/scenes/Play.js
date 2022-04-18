@@ -79,10 +79,11 @@ class Play extends Phaser.Scene {
         if(game.settings.singleplayer = 1){
             this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat').setOrigin(0.5, 0);
         }else{
+            //add cats p1 and p2
             this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat').setOrigin(0.5, 0);
         }
 
-        // add Spaceships (x3)
+        // add objects (x5)
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'fish', 0, 30,3).setOrigin(0, 0); //fish
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'bird', 0, 20,1.5).setOrigin(0,0); //bird
         this.ship03 = new Spaceship(this, game.config.width + borderUISize, borderUISize*5 + borderPadding*2, 'bird', 0, 23,2).setOrigin(0,0); //bird
