@@ -11,11 +11,6 @@ class Play extends Phaser.Scene {
         this.load.image('fish','./assets/FishSprite.png');
         this.load.image('milk','./assets/milk_bottle.png');
 
-        //load in other cat textures
-        this.load.image('catUp','./assets/CatUp.png');
-        this.load.image('catDown','./assets/CatDown.png');
-        this.load.image('cat2Up','./assets/Cat2Up.png');
-        this.load.image('cat2Down','./assets/Cat2Down.png');
 
         // load parallax background
         this.load.image('sky','./assets/skybackground.png');
@@ -28,6 +23,10 @@ class Play extends Phaser.Scene {
         this.load.spritesheet('birdFlying','./assets/BirdFlying.png',{frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
         this.load.spritesheet('fishFlying','./assets/FishFlying.png',{frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
         this.load.spritesheet('cat2Run','./assets/Cat2Run.png',{frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
+        this.load.spritesheet('catUp','./assets/CatUp.png',{frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('catDown','./assets/CatDown.png',{frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('cat2Up','./assets/Cat2Up.png',{frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('cat2Down','./assets/Cat2Down.png',{frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 0});
 
         //Song: Rob Gasser - Ricochet [NCS Release]
         //Music provided by NoCopyrightSounds
@@ -73,15 +72,31 @@ class Play extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         });
-
+        this.anims.create({
+            key: 'catUp',
+            frames: this.anims.generateFrameNumbers('catUp', { start: 0, end: 0, first: 0}),
+            frameRate: 1,
+        });
+        this.anims.create({
+            key: 'catDown',
+            frames: this.anims.generateFrameNumbers('catDown', { start: 0, end: 0, first: 0}),
+            frameRate: 1,
+        });
+        this.anims.create({
+            key: 'cat2Up',
+            frames: this.anims.generateFrameNumbers('cat2Up', { start: 0, end: 0, first: 0}),
+            frameRate: 1,
+        });
+        this.anims.create({
+            key: 'cat2Down',
+            frames: this.anims.generateFrameNumbers('cat2Down', { start: 0, end: 0, first: 0}),
+            frameRate: 1,
+        });
 
         //Play music on a loop
         var music = this.sound.add('level_music');
         music.setLoop(true);
         music.play();
-
-        // some sort of background
-        //this.add.rectangle(0, borderUISize - borderPadding -20, game.config.width, borderUISize , 0x00FF00).setOrigin(0, 0);
 
         // borders
         this.add.rectangle(0, 0, game.config.width, borderUISize/8, 0xFFFD00).setOrigin(0 ,0);
@@ -89,13 +104,15 @@ class Play extends Phaser.Scene {
         this.add.rectangle(0, 0, borderUISize/8, game.config.height, 0xFFFD00).setOrigin(0 ,0);
         this.add.rectangle(game.config.width - borderUISize/8, 0, borderUISize, game.config.height, 0xFFFD00).setOrigin(0 ,0);
 
-        // add cat (p1)
         //add cats p1 and p2
         if(game.settings.singlePlayer == 1){
-            this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat', 0,1).setOrigin(0.5, 0);
+            this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'catRun', 0,1).setOrigin(0.5, 0);
+            this.p1Rocket.play('catRun');
         }else{
-            this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cat', 0,1).setOrigin(0.5, 0);
+            this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'catRun', 0,1).setOrigin(0.5, 0);
+            this.p1Rocket.play('catRun');
             this.p2Rocket = new Rocket(this, game.config.width/4, game.config.height - borderUISize - borderPadding, 'cat2', 0,2).setOrigin(0.5, 0);
+            this.p2Rocket.play('cat2Run');
         }
         // add objects (x5)
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'fish', 0, 30,3).setOrigin(0, 0); //fish
@@ -103,6 +120,11 @@ class Play extends Phaser.Scene {
         this.ship03 = new Spaceship(this, game.config.width + borderUISize, borderUISize*5 + borderPadding*2, 'bird', 0, 23,2).setOrigin(0,0); //bird
         this.ship04 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'milk', 0, 10,1).setOrigin(0,0); //milk
         this.ship05 = new Spaceship(this, game.config.width + borderUISize, borderUISize*6 + borderPadding*4, 'milk', 0, 15,1.5).setOrigin(0,0); //milk
+
+        //play object animations
+        this.ship01.play('fishFly');
+        this.ship02.play('birdFly');
+        this.ship03.play('birdFly');
 
         // define keys
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -113,6 +135,10 @@ class Play extends Phaser.Scene {
         keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         keyT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T);
+
+        //initialize boolean for catFall
+        this.catFall = false;
+        this.cat2Fall = false;
 
         // initialize score
         this.p1Score = 0;
@@ -158,19 +184,40 @@ class Play extends Phaser.Scene {
             this.gameOver = true;
         }, null, this);
 
-        // call the animate function
-        //this.animate(this.p1Rocket,'catRun');
-        this.animate(this.ship01,'fishFly');
-        this.animate(this.ship02,'birdFly');
-        this.animate(this.ship03,'birdFly');
     }
 
     update() {
-        // call the animate function
-        //this.animate(this.p1Rocket,'catRun');
 
         //timer display
         this.timerLeft.text = Math.round(this.clock.delay-this.clock.elapsed)
+
+        //isFiring changes animation
+        if(this.p1Rocket.isFiring && this.catFall == false){
+            this.p1Rocket.play('catUp');
+        }
+        //if the cat is Sfalling, play catDown
+        if(this.p1Rocket.y <= 109.33333333333331){
+            this.catFall = true
+            this.p1Rocket.play('catDown');
+        }
+        if(this.p1Rocket.y >= 437.3333333333333 && this.catFall == true){
+            this.catFall = false
+            this.p1Rocket.play('catRun')
+        }
+        
+        //isFiring changes animation
+        if(this.p2Rocket.isFiring && this.cat2Fall == false){
+            this.p2Rocket.play('cat2Up');
+        }
+        //if the cat is Sfalling, play catDown
+        if(this.p2Rocket.y <= 109.33333333333331){
+            this.cat2Fall = true
+            this.p2Rocket.play('cat2Down');
+        }
+        if(this.p2Rocket.y >= 437.3333333333333 && this.cat2Fall == true){
+            this.cat2Fall = false
+            this.p2Rocket.play('cat2Run')
+        }
 
         // check key input for restart / menu
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
@@ -214,44 +261,34 @@ class Play extends Phaser.Scene {
 
         // check collisions
         if(this.checkCollision(this.p1Rocket, this.ship04)) {
-            //this.p1Rocket.reset();
             this.shipExplode(this.ship04);
         }        
         if(this.checkCollision(this.p1Rocket, this.ship05)) {
-            //this.p1Rocket.reset();
             this.shipExplode(this.ship05);
         }
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
-            //this.p1Rocket.reset();
             this.shipExplode(this.ship03);
         }
         if (this.checkCollision(this.p1Rocket, this.ship02)) {
-            //this.p1Rocket.reset();
             this.shipExplode(this.ship02);
         }
         if (this.checkCollision(this.p1Rocket, this.ship01)) {
-            //this.p1Rocket.reset();
             this.shipExplode(this.ship01);
         }
         if(game.settings.singlePlayer == 0){
             if(this.checkCollision(this.p2Rocket, this.ship04)) {
-                //this.p1Rocket.reset();
                 this.shipExplode(this.ship04);
             }        
             if(this.checkCollision(this.p2Rocket, this.ship05)) {
-                //this.p1Rocket.reset();
                 this.shipExplode(this.ship05);
             }
             if(this.checkCollision(this.p2Rocket, this.ship03)) {
-                //this.p1Rocket.reset();
                 this.shipExplode(this.ship03);
             }
             if (this.checkCollision(this.p2Rocket, this.ship02)) {
-                //this.p1Rocket.reset();
                 this.shipExplode(this.ship02);
             }
             if (this.checkCollision(this.p2Rocket, this.ship01)) {
-                //this.p1Rocket.reset();
                 this.shipExplode(this.ship01);
             }
         }
@@ -283,26 +320,7 @@ class Play extends Phaser.Scene {
         // score add and repaint
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score; 
-        //this.gameTimer += ship.points  // cut because I don't how to make that update with the display
         
         this.sound.play('sfx_explosion');
-      }
-
-    //replace the still sprites with an animated one
-    animate(objectSprite, spritesheet) {
-        // hide default sprite
-        objectSprite.alpha = 1;                         
-        // create sprite at cat's position
-        let anima = this.add.sprite(objectSprite.x, objectSprite.y, spritesheet).setOrigin(0, 0);
-        anima.anims.play(spritesheet); // play spritesheet animation
-      };
-    
-    //set texture
-    setTexture(key, frame)
-    {
-        this.texture = this.scene.sys.textures.get(key);
-
-        return this.setFrame(frame);
-    }
-    
+      }    
 }

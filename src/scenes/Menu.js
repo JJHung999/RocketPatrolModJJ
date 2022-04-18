@@ -5,9 +5,9 @@ class Menu extends Phaser.Scene {
 
     preload() {
         // load audio
-        this.load.audio('sfx_select', './assets/meow.wav');
-        this.load.audio('sfx_explosion', './assets/bong.wav');
-        this.load.audio('sfx_rocket', './assets/meow.wav');
+        this.load.audio('sfx_select', './assets/meow.wav'); //new cat sound
+        this.load.audio('sfx_explosion', './assets/bong.wav'); //new sound sfx
+        this.load.audio('sfx_rocket', './assets/meow.wav'); //new cat sound
 
         // load music
         //Song: Desmeon - Hellcat [NCS Release]
@@ -42,13 +42,6 @@ class Menu extends Phaser.Scene {
 
         //create menu image
         this.menuImage = this.add.sprite(game.config.width/2,game.config.height/2,'menu');
-
-        // show menu text
-        //this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'The Adventurous Cat', menuConfig).setOrigin(0.5);
-        //this.add.text(game.config.width/2, game.config.height/2, 'Use ←→ arrows to move & (F) to fire', menuConfig).setOrigin(0.5);
-        //menuConfig.backgroundColor = '#00FF00';
-        //menuConfig.color = '#000';
-        //this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);
 
         // define keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
