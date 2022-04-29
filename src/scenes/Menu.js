@@ -1,4 +1,6 @@
 class Menu extends Phaser.Scene {
+    
+    // Modding time: 8+ hours
     constructor() {
         super("menuScene");
     }
